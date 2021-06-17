@@ -3,7 +3,7 @@
 # Except for subdirectories(won't be committed anyway if there is no committed file inside)
 !/experiment/sounds/**/
 # Except base sounds and py/ipynb files
-!/experiment/sounds/base_sounds/*.wav
+!/experiment/sounds/base_sounds/*
 !/experiment/sounds/*.py
 !/experiment/sounds/*.ipynb
 
