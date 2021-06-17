@@ -20,7 +20,7 @@ import shutil
 def get_stim_info(file_name, folder):
 # read stimulus information stored in same folder as file_name, with a .txt extension
 # returns a list of values    
-    info_file_name = os.path.join(folder, os.path.splitext(os.path.basename(file_name))[0]+'.txt')
+    info_file_name = os.path.join(folder, os.path.splitext(file_name)[0]+'.txt')
     info = []
     with open(info_file_name,'r') as file:
         reader = csv.reader(file)
@@ -97,6 +97,7 @@ def generate_practice_trial_file(subject_number=1, n_practice_trials = 3, model_
                 output_sound_path = "sounds/Subj"+str(subject_number)
                 for sound_file in trial: 
                     # copy sound file
+                    os.makedirs(os.path.dirname(os.path.join(output_sound_path,sound_file)), exist_ok=True)
                     shutil.copy(os.path.join(input_sound_path,sound_file),os.path.join(output_sound_path,sound_file))
                     # copy config file
                     config_file = os.path.splitext(sound_file)[0]+'.txt'
