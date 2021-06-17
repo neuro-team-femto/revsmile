@@ -15,6 +15,7 @@ import pyaudio
 import wave
 import scipy.io.wavfile as wav
 import numpy as np
+import shutil
 
 def get_stim_info(file_name, folder):
 # read stimulus information stored in same folder as file_name, with a .txt extension
@@ -74,28 +75,53 @@ def generate_trial_files(subject_number=1,n_blocks=7,n_stims=100):
 
     return trial_files
 
-def generate_practice_trial_file(subject_number=1, n_practice_trials = 3):
-# generates one file of practice trials
-# the block contains a fixed nb of trials, selected randomly from the real trials
+def generate_practice_trial_file(subject_number=1, n_practice_trials = 3, model_practice_file = None ):
+# generates one file of practice trials, named with subject number, copied in folder /trials
+# the block contains a fixed nb of trials, either selected randomly from the real trials (if model_practice_file = None), 
+# or copied from model_practice_file (eg. sounds/base_sounds/model_practice_file.csv)  
 # returns one file_name
     
-    seed = time.getTime()
-    random.seed(seed)
-    stim_folder = "sounds/Subj"+str(subject_number)
-    sound_files = [os.path.basename(x) for x in glob.glob(stim_folder+"/*.wav")]
-    random.shuffle(sound_files)
-    first_half = sound_files[:int(len(sound_files)/2)]
-    second_half = sound_files[int(len(sound_files)/2):]
-    
-    # each trial is stored as a row in a csv file, with format: StimA,StimB
     trial_file = 'trials/trials_subj' + str(subject_number) + '_PRACTICE_' + date.strftime('%y%m%d_%H.%M')+'.csv'
-    with open(trial_file, 'w+', newline='') as file :
-        # write header
-        writer = csv.writer(file)
-        writer.writerow(["StimA","StimB"])
-        # write n_practice_trials
-        for trial_stims in list(zip(first_half, second_half))[:n_practice_trials]:   
-            writer.writerow(trial_stims)
+    
+
+    if model_practice_file is not None: 
+        if not os.path.exists(model_practice_file):
+            print(model_practice_file, "not found") 
+        else:     
+            # copy practice file from model
+            shutil.copy(model_practice_file, trial_file)
+            # find sounds listed in model_practice_file, and copy into sounds/subj
+            trials = read_trials(model_practice_file)
+            for trial in trials :
+                input_sound_path = os.path.dirname(model_practice_file)
+                output_sound_path = "sounds/Subj"+str(subject_number)
+                for sound_file in trial: 
+                    # copy sound file
+                    shutil.copy(os.path.join(input_sound_path,sound_file),os.path.join(output_sound_path,sound_file))
+                    # copy config file
+                    config_file = os.path.splitext(sound_file)[0]+'.txt'
+                    shutil.copy(os.path.join(input_sound_path,config_file),os.path.join(output_sound_path,config_file))
+
+    else:     
+        # select randomly from real trials
+        seed = time.getTime()
+        random.seed(seed)
+        stim_folder = "sounds/Subj"+str(subject_number)
+        sound_files = [os.path.basename(x) for x in glob.glob(stim_folder+"/*.wav")]
+        random.shuffle(sound_files)
+        first_half = sound_files[:int(len(sound_files)/2)]
+        second_half = sound_files[int(len(sound_files)/2):]
+    
+        # each trial is stored as a row in a csv file, with format: StimA,StimB
+        trial_file = 'trials/trials_subj' + str(subject_number) + '_PRACTICE_' + date.strftime('%y%m%d_%H.%M')+'.csv'
+        with open(trial_file, 'w+', newline='') as file :
+            # write header
+            writer = csv.writer(file)
+            writer.writerow(["StimA","StimB"])
+            # write n_practice_trials
+            for trial_stims in list(zip(first_half, second_half))[:n_practice_trials]:   
+                writer.writerow(trial_stims)
+
     return trial_file
 
 def read_trials(trial_file): 
@@ -240,7 +266,7 @@ for index, response_option in enumerate(response_options):
 result_file = generate_result_file(subject_number)
 trial_files = generate_trial_files(subject_number,n_blocks,n_stims)
 # add practice block in first positio
-practice_file = generate_practice_trial_file(subject_number, n_practice_trials)
+practice_file = generate_practice_trial_file(subject_number, n_practice_trials, model_practice_file='./sounds/base_sounds/model_trials.csv')
 trial_files.insert(0, practice_file)
 # duplicate last block (for internal noise computation)
 if repeat_for_internal_noise:
