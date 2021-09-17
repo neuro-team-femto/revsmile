@@ -1,3 +1,5 @@
 StimA,StimB
-gomot_a.wav,gomot_e.wav
-gomot_e.wav,gomot_a.wav
+practice/M_n_cut_antismile_tours.wav,practice/M_n_cut_smile_tours.wav
+practice/M_n_cut_smile_controls.wav,practice/M_n_cut_antismile_controls.wav
+practice/M_n_cut_antismile_tours.wav,practice/M_n_cut_smile_controls.wav
+practice/M_n_cut_smile_controls.wav,practice/M_n_cut_antismile_tours.wav
