@@ -6,6 +6,7 @@
 !/experiment/sounds/base_sounds/**
 !/experiment/sounds/*.py
 !/experiment/sounds/*.ipynb
+!/experiment/sounds/Subj1/**
 
 # Ignore everything inside experiment/sounds
 /experiment/results/**
