@@ -9,7 +9,7 @@ Example configuration script.
 # main parameters
 main_pars = {
     'outPath': './sounds/',   # output root folder
-    'numFiles': 10,     # number of output files to generate (for random modifications)
+    'numFiles': 1000,     # number of output files to generate (for random modifications)
     'chain': True,      # apply transformation in series (True) or parallel (False)
     'transf': ['eq'],   # transformations to apply
     'generateExpFolder': True  # generate experiment folder with name based on current time
