@@ -7,21 +7,24 @@
 !/experiment/sounds/*.py
 !/experiment/sounds/*.ipynb
 !/experiment/sounds/Subj1/**
-
-# Ignore everything inside experiment/sounds
+# Ignore everything inside experiment/results
 /experiment/results/**
-# Except for subdirectories(won't be committed anyway if there is no committed file inside)
-#!/experiment/results/**/
+# Ignore everything inside experiment/trials
+/experiment/trials/**
 
 # Ignore everything inside experiment/sounds
-/experiment/trials/**
-# Except for subdirectories(won't be committed anyway if there is no committed file inside)
-#!/experiment/trials/**/
+/analysis/sounds/**
+# Except base sounds and py/ipynb files
+!/analysis/sounds/base_sounds/**
+
+# Ignore everything inside experiment/sounds
+/stimulus_generation/sounds/**
+# Except base sounds and py/ipynb files
+!/stimulus_generation/sounds/base_sounds/**
+
 
 # Ignore voimooo license file anywhere
 **/*.uid
-
-
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
